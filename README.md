@@ -344,6 +344,9 @@ asdasdasdasdasdasdasdasdasd
 ```
 
 # Recommendation
+As mentioned in: skip2/go-qrcode
+>The maximum capacity of a QR Code varies according to the content encoded and the error recovery level. The maximum capacity is 2,953 bytes, 4,296 alphanumeric characters, 7,089 numeric digits, or a combination of these.  
+
 I spent a shit ton of time adding comments to the source-code. You can completely rebuild anything just by reading the comments, and you should, because this is the way that I made it for myself.  
 
 Mind that this script/binary is more or less useless without the server tool I made: [Goshh-Server](https://github.com/5ur/Goshh-Server)  
