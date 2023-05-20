@@ -156,15 +156,16 @@ eg:
 ```
 
 # Usage
-Pipeline data processing:  
-```Powershell
+```
 # Simple use:
 ❯ "A piped message" | .\Goshh-Client.exe                
 http://localhost:5150/message/20230520135010
 
 ❯ curl http://localhost:5150/message/20230520135010
 A piped message
+```
 
+```
 # Piping commands' stdio:
 ❯ gci | .\Goshh-Client.exe
 http://localhost:5150/message/20230520135616
@@ -186,7 +187,10 @@ d----         5/15/2023   8:02 PM                  .github
 -a---         5/18/2023   9:30 AM           1083   LICENSE
 -a---          5/4/2023  10:50 PM           1002   qrtest
 -a---         5/20/2023   1:27 PM           6370   README.md
+```
 
+
+```
 # Completely messed up, but it's an interesting thing to do:
 ❯ mpv --vo=tct quake.jpg --really-quiet --no-terminal | .\Goshh-Client.exe
 http://localhost:5150/message/20230520140958
@@ -194,7 +198,9 @@ http://localhost:5150/message/20230520140958
 ❯ curl http://localhost:5150/message/20230520140958
   ΓûäΓûäΓûäΓûäΓûä...............
   Imagine a colored unicode picture of the quake logo here.
+```
 
+```
 # Passing various flags:
 # -rune:
 ❯ gci | .\Goshh-Client.exe -rune Get-ChildItem
@@ -216,7 +222,9 @@ d----         5/15/2023   8:02 PM                  .github
 -a---         5/18/2023   9:30 AM           1083   LICENSE
 -a---          5/4/2023  10:50 PM           1002   qrtest
 -a---         5/20/2023   1:27 PM           6370   README.md
+```
 
+```
 # -qr (Offline, doesn't send POST to the server)
 ❯ $PSVersionTable.PSEdition | .\Goshh-Client.exe -qr
 █████████████████████████████
@@ -234,8 +242,10 @@ d----         5/15/2023   8:02 PM                  .github
 ████▄▄▄▄▄▄▄█▄▄█▄██▄▄▄█▄█▄████
 █████████████████████████████
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+```
 
--qrl (Takes the URL output and encodes it to a QR code)
+```
+# -qrl (Takes the URL output and encodes it to a QR code)
 ❯ $PSVersionTable.PSEdition | .\Goshh-Client.exe -qrl
 █████████████████████████████████████
 █████████████████████████████████████
@@ -258,8 +268,10 @@ d----         5/15/2023   8:02 PM                  .github
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 
 http://localhost:5150/message/20230520142618
+```
 
--qrc (Takes the returned URL and passes a GET to it, followed by encoding the output into a QR code)
+```
+# -qrc (Takes the returned URL and passes a GET to it, followed by encoding the output into a QR code)
 ❯ $PSVersionTable.PSEdition | .\Goshh-Client.exe -qrc
 █████████████████████████████
 █████████████████████████████
@@ -276,7 +288,9 @@ http://localhost:5150/message/20230520142618
 ████▄▄▄▄▄▄▄█▄▄█▄██▄▄▄█▄█▄████
 █████████████████████████████
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+```
 
+```
 # Mix and matching with rune:
 ❯ $PSVersionTable.PSEdition | .\Goshh-Client.exe -qrl -rune Hi
 █████████████████████████████████
@@ -299,6 +313,7 @@ http://localhost:5150/message/20230520142618
 
 http://localhost:5150/message/Hi
 
+
 ❯ $PSVersionTable.PSEdition | .\Goshh-Client.exe -qrc -rune Hi
 █████████████████████████████
 █████████████████████████████
@@ -315,7 +330,9 @@ http://localhost:5150/message/Hi
 ████▄▄▄▄▄▄▄█▄▄█▄██▄▄▄█▄█▄████
 █████████████████████████████
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+```
 
+```
 # Running without piped data:
 (All flags will work in the exact same way, but in this case it will prompt you to place in your message (input is hidden)).
 ❯ .\Goshh-Client.exe -rune Hi
