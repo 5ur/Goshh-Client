@@ -9,7 +9,7 @@
   </a>
 
 <p align="center">
-  A Go message and file sharing client made for [Goshh-Server](https://github.com/6ur/Goshh-Server)
+  A Go message and file sharing client made for <a href="https://github.com/6ur/Goshh-Server"><strong>Goshh-Server</strong></a>
   <br />
   <a href="Placeholder"><strong>Wiki»</strong></a>
 </div>
