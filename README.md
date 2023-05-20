@@ -22,7 +22,6 @@
     <li><a href="#prerequisites">Prerequisites</a></li>
     <li><a href="#Installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#examples">Examples</a></li>
     <li><a href="#recommendation">Recommendation</a></li>
   </ol>
 </details>
@@ -157,8 +156,175 @@ eg:
 ```
 
 # Usage
+Pipeline data processing:  
+```Powershell
+# Simple use:
+❯ "A piped message" | .\Goshh-Client.exe                
+http://localhost:5150/message/20230520135010
 
-# Examples
+❯ curl http://localhost:5150/message/20230520135010
+A piped message
+
+# Piping commands' stdio:
+❯ gci | .\Goshh-Client.exe
+http://localhost:5150/message/20230520135616
+
+❯ curl http://localhost:5150/message/20230520135616
+
+        Directory: D:\GitHub\Goshh\Goshh-Client
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d----         5/15/2023   8:02 PM                  .github
+-a---         4/30/2023   9:16 AM           2794   .gitignore
+-a---         5/20/2023   1:27 PM              6   .version
+-a---         5/13/2023   7:08 PM          10149   client.go
+-a---         5/20/2023   8:23 AM            161   config.yaml.example
+-a---         5/13/2023   9:47 AM            904   go.mod
+-a---         5/13/2023   9:47 AM          48086   go.sum
+-a---         5/14/2023   7:29 AM        9545728 ﬓ  Goshh-Client.exe
+-a---         5/18/2023   9:30 AM           1083   LICENSE
+-a---          5/4/2023  10:50 PM           1002   qrtest
+-a---         5/20/2023   1:27 PM           6370   README.md
+
+# Completely messed up, but it's an interesting thing to do:
+❯ mpv --vo=tct quake.jpg --really-quiet --no-terminal | .\Goshh-Client.exe
+http://localhost:5150/message/20230520140958
+
+❯ curl http://localhost:5150/message/20230520140958
+  ΓûäΓûäΓûäΓûäΓûä...............
+  Imagine a colored unicode picture of the quake logo here.
+
+# Passing various flags:
+# -rune:
+❯ gci | .\Goshh-Client.exe -rune Get-ChildItem
+http://localhost:5150/message/GetChildItem
+
+❯ curl http://localhost:5150/message/GetChildItem
+        Directory: D:\GitHub\Goshh\Goshh-Client
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d----         5/15/2023   8:02 PM                  .github
+-a---         4/30/2023   9:16 AM           2794   .gitignore
+-a---         5/20/2023   1:27 PM              6   .version
+-a---         5/13/2023   7:08 PM          10149   client.go
+-a---         5/20/2023   8:23 AM            161   config.yaml.example
+-a---         5/13/2023   9:47 AM            904   go.mod
+-a---         5/13/2023   9:47 AM          48086   go.sum
+-a---         5/14/2023   7:29 AM        9545728 ﬓ  Goshh-Client.exe
+-a---         5/18/2023   9:30 AM           1083   LICENSE
+-a---          5/4/2023  10:50 PM           1002   qrtest
+-a---         5/20/2023   1:27 PM           6370   README.md
+
+# -qr (Offline, doesn't send POST to the server)
+❯ $PSVersionTable.PSEdition | .\Goshh-Client.exe -qr
+█████████████████████████████
+█████████████████████████████
+████ ▄▄▄▄▄ █ ▀█▀▄█ ▄▄▄▄▄ ████
+████ █   █ █ ▄ ▄ █ █   █ ████
+████ █▄▄▄█ █▀▄ ▄ █ █▄▄▄█ ████
+████▄▄▄▄▄▄▄█▄█▄█▄█▄▄▄▄▄▄▄████
+████ ▄▀▀ ▄▄▀▀███ ▀▀▄█ ▄ ▄████
+████▀▀▀ ██▄██▄▀▀ ▄█▀██▄ ▀████
+█████▄▄▄▄█▄█▀█▀ ▀█▄▄▄▄▀  ████
+████ ▄▄▄▄▄ █▀▀▀▄█▀  ▄▄▄▄▀████
+████ █   █ █▄ ▀█   █▄▀▀▀ ████
+████ █▄▄▄█ █▀▄ ▀ ▄█▄ ▀███████
+████▄▄▄▄▄▄▄█▄▄█▄██▄▄▄█▄█▄████
+█████████████████████████████
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+-qrl (Takes the URL output and encodes it to a QR code)
+❯ $PSVersionTable.PSEdition | .\Goshh-Client.exe -qrl
+█████████████████████████████████████
+█████████████████████████████████████
+████ ▄▄▄▄▄ █▀█ █▄▄█▄▀▀█▀▄█ ▄▄▄▄▄ ████
+████ █   █ █▀▀▀█ ▄▄▄█▄ ███ █   █ ████
+████ █▄▄▄█ █▀ █▀▀▀▄  █ ███ █▄▄▄█ ████
+████▄▄▄▄▄▄▄█▄▀ ▀▄▀▄▀▄█▄▀▄█▄▄▄▄▄▄▄████
+████▄▄  ▄█▄▄▄▄▀▄▀█ ▀▄▀ ██ ▀ ▀▄█▄▀████
+████ ▀▀▀█▀▄ ▄█▄█▀█ ▄ ▀█▀▄ ▄▀▄██▀█████
+████▀▀▀▀ ▄▄▀ ▄▄█▄█▀ █  ██▀▀▀▀▄ █▀████
+████▄▄▀▄▄▄▄▀█▄  ▄▄█▄█▀▀▀██ ▄ █▄▀█████
+████▀▀ ▄█▀▄▄▄▀▀▄▀▀█▄▀  █▄█▀▀▀▀ █▀████
+████ █▄▄▄▄▄▀█▄██▀ ▄▀ ▄▀██▄▀▄▀▄▄▀█████
+████▄█▄█▄█▄▄  ██▄█▄▄█ ▀▀ ▄▄▄ ▀   ████
+████ ▄▄▄▄▄ █▄██ ▄█▀▀▀▄▀█ █▄█  ▄██████
+████ █   █ █ ▀█▄▀▀▀█▀ ▀█ ▄▄▄▄▀ ▄█████
+████ █▄▄▄█ █ ███▀ ▄▀▀█▀▀ █▄ ▄▀█ █████
+████▄▄▄▄▄▄▄█▄███▄█▄██▄▄██▄█▄██▄██████
+█████████████████████████████████████
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+http://localhost:5150/message/20230520142618
+
+-qrc (Takes the returned URL and passes a GET to it, followed by encoding the output into a QR code)
+❯ $PSVersionTable.PSEdition | .\Goshh-Client.exe -qrc
+█████████████████████████████
+█████████████████████████████
+████ ▄▄▄▄▄ █ ▀█▀▄█ ▄▄▄▄▄ ████
+████ █   █ █ ▄ ▄ █ █   █ ████
+████ █▄▄▄█ █▀▄ ▄ █ █▄▄▄█ ████
+████▄▄▄▄▄▄▄█▄█▄█▄█▄▄▄▄▄▄▄████
+████ ▄▀▀ ▄▄▀▀███ ▀▀▄█ ▄ ▄████
+████▀▀▀ ██▄██▄▀▀ ▄█▀██▄ ▀████
+█████▄▄▄▄█▄█▀█▀ ▀█▄▄▄▄▀  ████
+████ ▄▄▄▄▄ █▀▀▀▄█▀  ▄▄▄▄▀████
+████ █   █ █▄ ▀█   █▄▀▀▀ ████
+████ █▄▄▄█ █▀▄ ▀ ▄█▄ ▀███████
+████▄▄▄▄▄▄▄█▄▄█▄██▄▄▄█▄█▄████
+█████████████████████████████
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+# Mix and matching with rune:
+❯ $PSVersionTable.PSEdition | .\Goshh-Client.exe -qrl -rune Hi
+█████████████████████████████████
+█████████████████████████████████
+████ ▄▄▄▄▄ █  ▀▄▄ █▄██ ▄▄▄▄▄ ████
+████ █   █ █  █ ▄▀▄█▄█ █   █ ████
+████ █▄▄▄█ █▀▄█▄█ ▀▄██ █▄▄▄█ ████
+████▄▄▄▄▄▄▄█▄▀ █ █ ▀▄█▄▄▄▄▄▄▄████
+████ ▄█▀ ▄▄▀█ ▄▀▄▀▄▀ ██▄▀ ▄ ▄████
+█████ ▄▀▀█▄ ▄ ▄ ▄█ ▄▀▄▀  ▄ ▀█████
+████ █ █▄ ▄█ ██▀▄▀▄▀ ▄▄▄▀▄▄ ▄████
+██████▄ █ ▄ ▀▄ ▄▄██▄█▄█▀▀  ▀█████
+████▄▄▄▄▄█▄▄   ▀██ ▄ ▄▄▄ ▄ ██████
+████ ▄▄▄▄▄ █▀█ ▄▄▄ █ █▄█  ▀▀█████
+████ █   █ █▄█▄▀██▀█▄   ▄▀ █▄████
+████ █▄▄▄█ █▀▄▀  █  █▄  ▀▀▀ █████
+████▄▄▄▄▄▄▄█▄▄██▄██▄██▄███▄▄▄████
+█████████████████████████████████
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+http://localhost:5150/message/Hi
+
+❯ $PSVersionTable.PSEdition | .\Goshh-Client.exe -qrc -rune Hi
+█████████████████████████████
+█████████████████████████████
+████ ▄▄▄▄▄ █ ▀█▀▄█ ▄▄▄▄▄ ████
+████ █   █ █ ▄ ▄ █ █   █ ████
+████ █▄▄▄█ █▀▄ ▄ █ █▄▄▄█ ████
+████▄▄▄▄▄▄▄█▄█▄█▄█▄▄▄▄▄▄▄████
+████ ▄▀▀ ▄▄▀▀███ ▀▀▄█ ▄ ▄████
+████▀▀▀ ██▄██▄▀▀ ▄█▀██▄ ▀████
+█████▄▄▄▄█▄█▀█▀ ▀█▄▄▄▄▀  ████
+████ ▄▄▄▄▄ █▀▀▀▄█▀  ▄▄▄▄▀████
+████ █   █ █▄ ▀█   █▄▀▀▀ ████
+████ █▄▄▄█ █▀▄ ▀ ▄█▄ ▀███████
+████▄▄▄▄▄▄▄█▄▄█▄██▄▄▄█▄█▄████
+█████████████████████████████
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+# Running without piped data:
+(All flags will work in the exact same way, but in this case it will prompt you to place in your message (input is hidden)).
+❯ .\Goshh-Client.exe -rune Hi
+Please enter a message:
+http://localhost:5150/message/Hi
+
+❯ curl http://localhost:5150/message/Hi
+asdasdasdasdasdasdasdasdasd
+```
 
 # Recommendation
 I spent a shit ton of time adding comments to the source-code. You can completely rebuild anything just by reading the comments, and you should, because this is the way that I made it for myself.  
