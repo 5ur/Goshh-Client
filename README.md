@@ -88,62 +88,25 @@ You can also just add the above to a specif user's bashrc or profile.
    ```
 3. Build the binary
    ```Powershell
-   go build .
+   go install .
    ```
 4. Create your config file
   ```Powershell
-  mv config.yaml.example config.yaml
-  vim config.yaml
+  mkdir $env:USERPROFILE\.config\Goshh\
+  mv config.yaml.example $env:USERPROFILE\.config\Goshh\config.yaml
+  vim $env:USERPROFILE\.config\Goshh\config.yaml
   ```
   Example config file:
   ```YAML
-  # Gin debug mode:
-  debugMode: true
-  # Port for the engine:
-  serverPort: 5150
-  # Use default gin router (if false new is created):
-  useDefault: true
-  # Trusted proxy slice/array
-  trustedProxies:
-    # Local host only:
-    - 127.0.0.1
-    # Some RFC 1918 range:
-    - 10.0.0.0/8
-  # Time in which the slice of messages will be dumped
-  cleanupInterval: "10s"
-  # This achieves the same as adding all 1918 ranges in trustedProxies, just more convenient
-  allowLocalNetworkAccess: true
-  # You understand what this does with no context needed
-  allowedFileTypes:
-    - txt
-    - md
-    - jpg
-  # You understand what this does with no context needed
-  fileSavePath: "tmp/"
-  # Time after which a stale file will be deleted (ie; not downloaded at all, not downloaded enough times to reach the allowedFileDownloadCount limit)
-  staleFileTTL: "30s"
-  # The amount of times a file is allowed to be downloaded (kept in check by the file struct values)
-  allowedFileDownloadCount: 1 
+  messageEndpoint: http://sisyphus.local:5150/message
+  fileEndpoint: http://sisyphus.local:5150/upload
+  timeoutFrame: 300
+  generateQRL: false
+  generateQRC: false
   ```
 5. That's it
 Mind the follwoing:  
-If the server is started with no configuration file or a missing value/s, it will just start with the default ones hard-coded into the server binary.  
-eg:
-```Powershell
-❯ .\Goshh-Client.exe
-2023/05/20 12:03:18 Error reading config file: open config.yaml: The system cannot find the file specified.
-2023/05/20 12:03:18 Loading configuration values:
- fileSavePath="/path/to/save/files"
- staleFileTTL=30s
- debugMode=false
- allowLocalNetworkAccess=false
- allowedFileTypes=["txt" "md" "jpg"]
- cleanupInterval=30s
- allowedFileDownloadCount=1
- serverPort=5150
- useDefault=false
- trustedProxies=["127.0.0.1"]
-```
+If the client is started with no configuration file or a missing value/s, it will just start with the default ones hard-coded into the binary, which are just to localhost.  
 
 ## Linux
 1. Clone the repository:
@@ -154,46 +117,24 @@ cd Goshh-Client/
 2. Build in the same way
 ```Shell
 # If need be (eg; missing go.mod or you have a different go version)
-go mod init Gosh-Server
+go mod init Gosh-Client
 go mod tidy
 
 # Finally:
-go build .
+go install .
 ```
 3. Create your config file
 ```Shell
-mv config.yaml.example config.yaml
-vim config.yaml
+mv config.yaml.example ~/.config/Goshh/config.yaml
+vim ~/.config/Goshh/config.yaml
 ```
 Example config file:
 ```YAML
-# Gin debug mode:
-debugMode: true
-# Port for the engine:
-serverPort: 5150
-# Use default gin router (if false new is created):
-useDefault: true
-# Trusted proxy slice/array
-trustedProxies:
-  # Local host only:
-  - 127.0.0.1
-  # Some RFC 1918 range:
-  - 10.0.0.0/8
-# Time in which the slice of messages will be dumped
-cleanupInterval: "10s"
-# This achieves the same as adding all 1918 ranges in trustedProxies, just more convenient
-allowLocalNetworkAccess: true
-# You understand what this does with no context needed
-allowedFileTypes:
-  - txt
-  - md
-  - jpg
-# You understand what this does with no context needed
-fileSavePath: "tmp/"
-# Time after which a stale file will be deleted (ie; not downloaded at all, not downloaded enough times to reach the allowedFileDownloadCount limit)
-staleFileTTL: "30s"
-# The amount of times a file is allowed to be downloaded (kept in check by the file struct values)
-allowedFileDownloadCount: 1 
+  messageEndpoint: http://sisyphus.local:5150/message
+  fileEndpoint: http://sisyphus.local:5150/upload
+  timeoutFrame: 300
+  generateQRL: false
+  generateQRC: false
 ```
 4. That's it.
 Mind the follwoing:  
@@ -216,313 +157,15 @@ eg:
 ```
 
 # Usage
-## Standalone:
-### Windows:
-```Powerhsell
-PS ❯ .\Goshh-Client.exe
-2023/05/19 14:21:05 Loading configuration values:
- debugMode=true
- serverPort=5150
- allowLocalNetworkAccess=true
- fileSavePath="tmp/"
- staleFileTTL=30s
- useDefault=true
- trustedProxies=["127.0.0.1"]
- cleanupInterval=10s
- allowedFileTypes=["txt" "md" "jpg"]
- allowedFileDownloadCount=1
-[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
-
-[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
- - using env:   export GIN_MODE=release
- - using code:  gin.SetMode(gin.ReleaseMode)
-
-[GIN-debug] GET    /                         --> main.main.func2 (4 handlers)
-[GIN-debug] POST   /message                  --> main.main.func3 (4 handlers)
-[GIN-debug] GET    /message/:id              --> main.main.func4 (4 handlers)
-[GIN-debug] POST   /upload                   --> main.main.func6 (4 handlers)
-[GIN-debug] GET    /download/:filename       --> main.main.func7 (4 handlers)
-[GIN-debug] Listening and serving HTTP on :5150
-```
-### Linux:
-```Shell
-> ./Goshh-Client
-2023/05/20 08:21:44 Loading configuration values:
- useDefault=true
- trustedProxies=["127.0.0.1"]
- cleanupInterval=10s
- debugMode=true
- serverPort=5150
- fileSavePath="tmp/"
- staleFileTTL=30s
- allowedFileDownloadCount=1
- allowLocalNetworkAccess=true
- allowedFileTypes=["zip" "txt" "md" "jpg"]
-[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
-
-[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
- - using env:   export GIN_MODE=release
- - using code:  gin.SetMode(gin.ReleaseMode)
-
-[GIN-debug] GET    /                         --> main.main.func2 (4 handlers)
-[GIN-debug] POST   /message                  --> main.main.func3 (4 handlers)
-[GIN-debug] GET    /message/:id              --> main.main.func4 (4 handlers)
-[GIN-debug] POST   /upload                   --> main.main.func6 (4 handlers)
-[GIN-debug] GET    /download/:filename       --> main.main.func7 (4 handlers)
-[GIN-debug] Listening and serving HTTP on :5150
-```
-## Service:
-### Windows
-**.NET**
-I'm not explaining or giving a template for this, but you cab use this doc: [.NET service](https://learn.microsoft.com/en-us/dotnet/framework/windows-services/walkthrough-creating-a-windows-service-application-in-the-component-designer)
-
-**Powershell** (core is recommended, since the *-Service commandlets are more developed there)
-```Powershell
-New-Service -Name "Goshh Server" -BinaryPathName "Full_path_to_Goshh-Client_here.exe"
-```
-**Or**
-```Powershell
-sc.exe create "Goshh Server" binpath= "Full_path_to_Goshh-Client_here.exe"
-```
-Unless it's changed in the future, the service will be created with no additional prompts, and will be set to Automatic by default.  
-
-### Linux
-**Systemd:**  
-Make a new user for the service:
-```Bash
-useradd -m -d /home/gohh -s /bin/bash gohh
-
-# Lock the user, you won't be using it for anything. Besides you can just su to it.
-passwd -l gohh
-```
-Create a service file:  
-`vim /etc/systemd/system/goshh-server.service`  
-and place the following, or something like it in the new service file:  
-[Have a look here for more arguments and options.](https://www.freedesktop.org/software/systemd/man/systemd.service.html)
-```Bash
-[Unit]
-Description=Goshh Server
-After=network.target
-
-[Service]
-User=gohh
-WorkingDirectory=/home/gohh/
-ExecStart=/home/gohh/Goshh-Client
-Restart=on-failure
-RestartSec=5s
-StandardOutput=file:/var/log/goshh-server.log
-StandardError=file:/var/log/goshh-server.log
-
-[Install]
-WantedBy=default.target
-```
-
-Reload the daemon:  
-`systemctl daemon-reload`
-
-Enable and start:
-```Shell
-systemctl enable goshh-server
-systemctl start goshh-server
-```
-**SysV init script:**  
-Create a new user for the service:
-```Bash
-useradd -m -d /home/gohh -s /bin/bash gohh
-
-# Lock the user, you won't be using it for anything. Besides you can just su to it.
-passwd -l gohh
-```
-Create the init script:
-`vim /etc/init.d/goshh-server`
-And place in something like this:  
-See:  
-https://manpages.debian.org/testing/sysvinit-utils/init-d-script.5.en.html  
-https://www.cyberciti.biz/tips/linux-write-sys-v-init-script-to-start-stop-service.html  
-```Shell
-#!/bin/sh
-### BEGIN INIT INFO
-# Provides:          Goshh-Client
-# Required-Start:    $remote_fs $syslog
-# Required-Stop:     $remote_fs $syslog
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start/stop Goshh-Client
-### END INIT INFO
-
-NAME="Goshh-Client"
-USER="gohh"
-PATH="/home/goshh/"
-CMD="/home/goshh/Goshh-Client"
-LOG_FILE="/var/log/goshh-server.log"
-LOG_LINES=11
-
-case "$1" in
-  start)
-    echo "Starting $NAME"
-    start-stop-daemon --start --chuid "$USER" --chdir "$PATH" --background --make-pidfile --pidfile /var/run/$NAME.pid --startas /bin/bash -- -c "exec $CMD >> $LOG_FILE 2>&1"
-    ;;
-  stop)
-    echo "Stopping $NAME"
-    start-stop-daemon --stop --pidfile /var/run/$NAME.pid --retry=TERM/5/KILL/10 >/dev/null
-    ;;
-  restart)
-    echo "Restarting $NAME"
-    $0 stop
-    sleep 1
-    $0 start
-    ;;
-  status)
-    echo "Checking $NAME status"
-    if [ -e /var/run/$NAME.pid ]; then
-      echo "$NAME is running"
-      echo "Last $LOG_LINES lines of the log file:"
-      tail -$LOG_LINES $LOG_FILE
-      exit 0
-    else
-      echo "$NAME is not running"
-      exit 1
-    fi
-    ;;
-  *)
-    echo "Usage: $0 {start|stop|restart|status}"
-    exit 1
-    ;;
-esac
-
-exit 0
-```
-Make the script executable:  
-`chmod +x /etc/init.d/goshh-server`  
-Make the service startup automatically:  
-`update-rc.d Goshh-Client defaults`  
-Reload SysV:  
-`init q`  
 
 # Examples
-## curl
-Most basic:  
-```Shell
-❯ curl -X POST http://sisyphus.local:5150/message -H 'Content-Type: application/json' -d '{"message": "A message."}'
-http://sisyphus.local:5150/message/20230520094532
-
-❯ curl http://sisyphus.local:5150/message/20230520094532
-A message.
-
-❯
-```
-
-With a custom rune:  
-```Shell
-❯ curl -X POST http://sisyphus.local:5150/message -H 'Content-Type: application/json' -d '{"message": "Another message","rune": "goshh-server"}'
-http://sisyphus.local:5150/message/goshh-server
-
-❯ curl http://sisyphus.local:5150/message/goshh-server
-Another message
-
-❯ 
-
-# There is user input verification for the rune as well:
-❯ curl -X POST http://sisyphus.local:5150/message -H 'Content-Type: application/json' -d '{"message": "Test","rune": "@@#_(*^&@# *@#_%)*(@&#%)@#& @#N%V@#N &%*@#& %*)@#&%_@)#(*&%*(@#&%_)(@*#&^%@#%)(@*#%1"}'
-http://local:5150/message/__NVN__1
-
-❯ curl http://sisyphus.local:5150/message/__NVN__1
-Test
-
-❯
-```
-Sending a file:  
-```Shell
-❯ touch testfile.md
-
-❯ curl -X POST -F "file=@testfile.md" -H "Content-Type: multipart/form-data" http://sisyphus.local:5150/upload
-http://sisyphus.local:5150/download/testfile.md
-
-❯ wget http://sisyphus.local:5150/download/testfile.md
---2023-05-20 10:22:03--  http://sisyphus.local:5150/download/testfile.md
-Resolving sisyphus.local (sisyphus.local)... fe80::f4ac:8f:b906:8250, 192.168.100.7
-Connecting to sisyphus.local (sisyphus.local)|fe80::f4ac:8f:b906:8250|:5150... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 0 [application/octet-stream]
-Saving to: 'testfile.md.1'
-
-testfile.md.1                                  [ <=>                                                                                     ]       0  --.-KB/s    in 0s      
-
-2023-05-20 10:22:03 (0.00 B/s) - 'testfile.md.1' saved [0/0]
-
-❯ 
-
-```
-## iwr/irm
-iwr:  
-Basic message:  
-```Powershell
-$uri = "http://sisyphus.local:5150/message"
-$headers = @{
-    "Content-Type" = "application/json"
-}
-$body = @{
-    message = "A message."
-} | ConvertTo-Json
-
-$response = Invoke-WebRequest -Uri $uri -Method POST -Headers $headers -Body $body
-```
-
-irm:  
-```Powershell
-$uri = "http://sisyphus.local:5150/message"
-$headers = @{
-    "Content-Type" = "application/json"
-}
-$body = @{
-    message = "A message."
-} | ConvertTo-Json
-
-$response = Invoke-RestMethod -Uri $uri -Method POST -Headers $headers -Body $body
-```
-
-With rune:  
-```Powerhsell
-$uri = 'http://sisyphus.local:5150/message'
-$headers = @{
-    'Content-Type' = 'application/json'
-}
-$message = 'Another message'
-$rune = 'goshh-server'
-$body = @{
-    'message' = $message
-    'rune' = $rune
-} | ConvertTo-Json
-
-# Using Invoke-WebRequest (iwr)
-$response = Invoke-WebRequest -Uri $uri -Method POST -Headers $headers -Body $body
-
-# Using Invoke-RestMethod (irm)
-$response = Invoke-RestMethod -Uri $uri -Method POST -Headers $headers -Body $body
-```
-
-Sending a file:  
-iwr:  
-```Powershell
-$file = Get-Item -Path "C:\path\to\testfile.md"
-$url = "http://sisyphus.local:5150/upload"
-
-Invoke-WebRequest -Uri $url -Method POST -InFile $file -ContentType "multipart/form-data"
-```
-irm:  
-```Powershell
-$file = Get-Item -Path "C:\path\to\testfile.md"
-$url = "http://sisyphus.local:5150/upload"
-
-Invoke-RestMethod -Uri $url -Method POST -InFile $file -ContentType "multipart/form-data"
-```
 
 # Recommendation
 I spent a shit ton of time adding comments to the source-code. You can completely rebuild anything just by reading the comments, and you should, because this is the way that I made it for myself.  
 
-I urge you to have a look at the supplementary tool I made - [Goshh-Client](https://github.com/5ur/Goshh-Client)  
-It's purpose it to make this a bit better, since it features options like QR code generation, off/online usage, pipeline input translation, etc..
-<img src="https://github.com/5ur/Goshh/blob/main/logos/client_logo.png" alt="Logo" width="20%" height="20%">
+Mind that this script/binary is more or less useless without the server tool I made: [Goshh-Server](https://github.com/5ur/Goshh-Server)  
+<img src="https://github.com/5ur/Goshh/blob/main/logos/server_logo.png" alt="Logo" width="20%" height="20%">
+Please have a look at the Goshh-Server repository and consider installing it.  
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
