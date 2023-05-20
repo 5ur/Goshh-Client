@@ -166,7 +166,7 @@ A piped message
 ```
 
 ```
-# Piping commands' stdio:
+# Pipe-ing commands' stdio:
 ❯ gci | .\Goshh-Client.exe
 http://localhost:5150/message/20230520135616
 
